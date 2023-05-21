@@ -52,4 +52,32 @@
       ORDER BY 2 DESC;--
       
       
-      
+ ##Subqueries nested
+ 1. SELECT DATE_TRUNC('month', MIN(occurred_at)) 
+    FROM orders
+    
+    
+ 2. SELECT SUM(total_amt_usd), avg(standard_qty) as standard_qty, avg(gloss_qty) as gloss_qty, avg(poster_qty) as poster_qty 
+    FROM orders 
+    WHERE DATE_TRUNC('month', occurred_at) =
+	(SELECT DATE_TRUNC('month', MIN(occurred_at)) 
+	FROM orders)
+
+##Subquery Mania
+1. SELECT s.name sales_rep_name, r.name region_name, SUM(o.total_amt_usd) total_sales
+FROM sales_reps s
+JOIN region r
+ON s.region_id = r.id
+JOIN accounts a
+ON s.id = a.sales_rep_id
+JOIN orders o
+ON a.id = o.account_id
+
+WHERE o.total_amt_usd =
+(SELECT MAX(total_amt_usd) AS largest_amt
+   FROM orders)
+GROUP BY 1,2,3
+ORDER BY 1,2,3
+
+
+2. 
